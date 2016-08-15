@@ -1,4 +1,6 @@
 import express from 'express'
+import session from 'express-session'
+import {User} from './models'
 
 const app = express()
 
@@ -7,10 +9,10 @@ function getBundleLocation() {
   return 'build/bundle.js'
 }
 
+const indexPage = (req, res) => res.render('index', {bundleLocation: getBundleLocation()})
+
 app.set('view engine', 'pug')
 app.use('/build', express.static('build'))
-app.get('/', (req, res) => {
-  res.render('index', {bundleLocation: getBundleLocation()})
-})
+app.get('/', indexPage)
 
 app.listen(process.env.PORT || 3000)
