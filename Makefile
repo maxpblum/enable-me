@@ -12,16 +12,22 @@ build:
 lint:
 	$(ESLINT_BIN) ./src/*.*
 
-start-postgres-dev:
+start-db-dev:
 	rm -rf ./.db_tmp
 	initdb -E 'UTF-8' ./.db_tmp
 	pg_ctl -D ./.db_tmp -l ./.db_tmp/server.log start
 	sleep 2
 	createdb
 
-stop-postgres-dev:
+stop-db-dev:
 	pg_ctl -D ./.db_tmp -l ./.db_tmp/server.log stop
 	rm -rf ./.db_tmp
+
+migrate-db:
+	# WARNING: This will drop tables if they exist
+	# Sleeping five seconds, CTRL+C to cancel
+	sleep 5
+	node scripts/sync-models.js
 
 serve-server:
 	PORT=$(PORT) $(NODEMON_BIN) --watch ./server ./server/server
@@ -29,7 +35,7 @@ serve-server:
 serve-client:
 	$(WEBPACK_DEV_SERVER_BIN)
 
-serve-dev: start-postgres-dev
+serve-dev:
 	NODE_ENV=dev $(MAKE) serve-server & $(MAKE) serve-client
 
 serve: build serve-server
