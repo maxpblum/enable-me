@@ -17,6 +17,8 @@ const User = db.define('user', {
   },
 })
 
-User.sync({force: true})
+const sync = () => [
+  User,
+].map(model => model.sync({force: true}))
 
-export { User }
+export { User, sync }
