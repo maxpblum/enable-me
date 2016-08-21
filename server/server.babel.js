@@ -1,6 +1,5 @@
 import express from 'express'
-import session from 'express-session'
-import {User} from './models'
+import logging from 'winston'
 
 const app = express()
 
@@ -15,4 +14,6 @@ app.set('view engine', 'pug')
 app.use('/build', express.static('build'))
 app.get('/', indexPage)
 
+const port = process.env.PORT || 3000
+logging.info(`Listening on port ${port}`)
 app.listen(process.env.PORT || 3000)
