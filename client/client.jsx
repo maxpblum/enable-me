@@ -1,7 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+import AuthView from 'views/auth'
+
 ReactDOM.render(
-  <h1>Hello, wworld!</h1>,
+  <AuthView/>,
   document.getElementById('root')
 )
