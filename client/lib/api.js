@@ -1,10 +1,13 @@
 // From https://shellmonger.com/2015/03/24/promises-and-ajax-in-ecmascript-6/
 const Promise = window.Promise
 
-function ajaxGet(url) {
+function makeAjaxRequest({method, url, body, transforms = []}) {
   return new Promise(function(resolve, reject) {
     let req = new XMLHttpRequest()
-    req.open("GET", url)
+    req.open(method.toUpperCase(), url)
+
+    transforms.forEach(transform => transform(req))
+
     req.onload = function() {
       if (req.status === 200) {
         resolve(req.response)
@@ -17,8 +20,15 @@ function ajaxGet(url) {
       reject(new Error("Network error"))
     }
 
-    req.send()
+    req.send(body)
   })
 }
 
-export default { ajaxGet }
+export const get = url => makeAjaxRequest({url, method: 'get'})
+
+export const post = (url, body) => makeAjaxRequest({
+  url,
+  method: 'post',
+  body: JSON.stringify(body),
+  transforms: [req => req.setRequestHeader("Content-Type", "application/json;charset=UTF-8")]
+})
