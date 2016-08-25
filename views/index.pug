@@ -4,4 +4,6 @@ html(lang='en')
     title Hello, world!
   body
     div(id='root')
+    script(type='text/javascript').
+      window.BOOTSTRAP = !{JSON.stringify({user})}
     script(type='text/javascript', src=bundleLocation, charset='utf-8')
