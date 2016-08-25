@@ -13,6 +13,7 @@ const indexPage = (req, res) => res.render('index', {bundleLocation: getBundleLo
 app.set('view engine', 'pug')
 app.use('/build', express.static('build'))
 app.get('/', indexPage)
+app.post('/some-endpoint', (req, res) => res.send('it worked!'))
 
 const port = process.env.PORT || 3000
 logging.info(`Listening on port ${port}`)
