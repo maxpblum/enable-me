@@ -1,6 +1,7 @@
 import logging from 'winston'
 
 import {saltAndHash, getNewToken} from '../utils/authUtils'
+import {serializeUser} from '../serializers'
 import {User, Session} from '../models'
 
 const sessionMaxAge = 60 * 60 * 24 * 365
@@ -19,7 +20,7 @@ export function signUp(req, res) {
     .then(session => {
       res.cookie('session', session.token)
       res.cookie('maxAge', sessionMaxAge * 1000)
-      res.status(200).send({user, session})
+      res.status(200).send(serializeUser(user))
     })
   )
   .catch(err => {
