@@ -9,12 +9,17 @@ const updaters = fromJS({
   typePassword: (state, password) =>
     state.set('typedPassword', password),
   authFormSubmit: state => {
-    post('/some-endpoint', {
+    post('/users', {
       username: state.get('typedUsername'),
       password: state.get('typedPassword'),
-    })
+    }).then(user => store.dispatch({
+      type: 'setLoggedInUser',
+      data: user
+    }))
     return state
-  }
+  },
+  setLoggedInUser: (state, user) =>
+    state.set('user', fromJS(JSON.parse(user))),
 })
 
 function update(state = Map(), action) {

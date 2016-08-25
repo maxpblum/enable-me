@@ -1,12 +1,12 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {Map} from 'immutable'
 
-function AuthView({typedUsername, typedPassword, typeUsername, typePassword, authFormSubmit}) {
+function AuthView({typedUsername, typedPassword, typeUsername, typePassword, authFormSubmit, user}) {
   return (
-    <form
-      action='/endpoint'
-      onSubmit={e => {e.preventDefault(); authFormSubmit()}}
-    >
+    user.get('name') ?
+    <span>{`Hi, ${user.get('name')}!`}</span> :
+    <form onSubmit={e => {e.preventDefault(); authFormSubmit()}}>
       <h1>This is an Auth View</h1>
       <label htmlFor='username'>Username</label>
       <input type='text' name='username' value={typedUsername} onChange={e => typeUsername(e.target.value)}/>
@@ -23,6 +23,7 @@ AuthView.propTypes = {
   typedPassword: React.PropTypes.string,
   typeUsername: React.PropTypes.func,
   typePassword: React.PropTypes.func,
+  user: React.PropTypes.object,
 }
 
 AuthView.defaultProps = {
@@ -31,12 +32,14 @@ AuthView.defaultProps = {
   typedPassword: '',
   typeUsername: () => null,
   typePassword: () => null,
+  user: Map(),
 }
 
 const ConnectedAuthView = connect(
   state => ({
     typedUsername: state.get('typedUsername'),
     typedPassword: state.get('typedPassword'),
+    user: state.get('user'),
   }),
   dispatch => ({
     typeUsername: (username) =>
