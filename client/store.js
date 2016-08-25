@@ -1,9 +1,9 @@
 import {createStore} from 'redux'
-import {Map, fromJS} from 'immutable'
+import {fromJS} from 'immutable'
 
 import {post} from 'lib/api'
 
-export default function getNewStore() {
+export default function getNewStore(bootstrapData) {
   const updaters = fromJS({
     typeUsername: (state, username) =>
       state.set('typedUsername', username),
@@ -23,7 +23,7 @@ export default function getNewStore() {
       state.set('user', fromJS(JSON.parse(user))),
   })
 
-  function update(state = Map(), action) {
+  function update(state = fromJS(bootstrapData), action) {
     return updaters.get(action.type, s => s)(state, action.data)
   }
 
