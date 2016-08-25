@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom'
 
 import AuthView from 'views/auth'
 
-import store from 'store'
+import getNewStore from 'store'
+
+const store = getNewStore()
 
 ReactDOM.render(
   <AuthView store={store}/>,
