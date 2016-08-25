@@ -1,4 +1,5 @@
 import Sequelize from 'sequelize'
+import logging from 'winston'
 
 const db = new Sequelize('max', 'max', 'password', {
   host: 'localhost',
@@ -10,15 +11,49 @@ const db = new Sequelize('max', 'max', 'password', {
   },
 })
 
-const User = db.define('user', {
-  name: {
-    type: Sequelize.STRING,
-    field: 'name',
+const User = db.define(
+  'user',
+  {
+    name: {
+      allowNull: false,
+      type: Sequelize.STRING,
+      field: 'name',
+    },
+    hashedPassword: {
+      allowNull: false,
+      type: Sequelize.STRING,
+      field: 'hashed_password',
+    },
+    passwordSalt: {
+      allowNull: false,
+      type: Sequelize.STRING,
+      field: 'password_salt',
+    },
   },
+  {underscored: true},
+)
+
+const Session = db.define(
+  'session',
+  {
+    token: {
+      allowNull: false,
+      type: Sequelize.STRING(512),
+      field: 'token',
+    },
+    ttl: {
+      allowNull: false,
+      type: Sequelize.INTEGER,
+    },
+  },
+  {underscored: true},
+)
+
+Session.belongsTo(User)
+
+const sync = () => db.sync({
+  force: true,
+  logging: info => logging.info(info)
 })
 
-const sync = () => [
-  User,
-].map(model => model.sync({force: true}))
-
-export { User, sync }
+export { User, Session, sync }
