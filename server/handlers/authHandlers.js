@@ -28,3 +28,15 @@ export function signUp(req, res) {
     res.status(400).send(err)
   })
 }
+
+export const getSessionUser = (req, res, next) => {
+  const token = req.cookies.session
+  if (token) {
+    Session.findOne({where: {token}, include: [User]})
+    .then(({user}) => {
+      req.user = user
+      next()
+    })
+  }
+  else { next() }
+}
