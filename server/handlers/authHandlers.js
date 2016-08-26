@@ -4,10 +4,15 @@ import {saltAndHash, getNewToken} from '../utils/authUtils'
 import {serializeUser} from '../serializers'
 import {User, Session} from '../models'
 
+const Promise = global.Promise
+
 const sessionMaxAge = 60 * 60 * 24 * 365
 
 export function signUp(req, res) {
-  saltAndHash(req.body.password)
+  new Promise((resolve, reject) =>
+    (req.body.username && req.body.password) ?
+      resolve() : reject('Username and password required'))
+  .then(() => saltAndHash(req.body.password))
   .then(({salt, hash}) => User.create({
     name: req.body.username,
     passwordSalt: salt,
