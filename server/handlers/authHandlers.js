@@ -29,6 +29,16 @@ export function signUp(req, res) {
   })
 }
 
+export function logOut(req, res) {
+  new Promise((resolve, reject) =>
+    req.cookies.session ? resolve() : reject())
+  .then(() => Session.destroy({where: {token: req.cookies.session}}))
+  .then(() => {
+    res.clearCookie('session')
+    res.send(200)
+  })
+}
+
 export const getSessionUser = (req, res, next) => {
   const token = req.cookies.session
   if (token) {
