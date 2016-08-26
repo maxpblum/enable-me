@@ -2,8 +2,37 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Map} from 'immutable'
 
-function AuthView({typedUsername, typedPassword, typeUsername, typePassword, authFormSubmit, user}) {
+function Switch({currentType, setAuthFormType}) {
+  const {copy, otherType} = currentType === 'login' ?
+    {copy: 'Want to sign up?', otherType: 'signup'} :
+    {copy: 'Want to log in?', otherType: 'login'}
+  return (
+    <a
+      href='*'
+      onClick={e => {
+        e.preventDefault()
+        setAuthFormType(otherType)
+      }}
+    >
+      {copy}
+    </a>
+  )
+}
+
+Switch.propTypes = {
+  currentType: React.PropTypes.string,
+  setAuthFormType: React.PropTypes.func,
+}
+
+Switch.defaultProps = {
+  currentType: 'signup',
+  setAuthFormType: () => null,
+}
+
+function AuthView({authFormType, typedUsername, typedPassword, typeUsername, typePassword, authFormSubmit, user, setAuthFormType}) {
   const username = user.get('name')
+  const authText = authFormType === 'login' ? 'Log in' : 'Sign up'
+  const switchProps = {setAuthFormType, currentType: authFormType}
   const loggedInForm = [
     <span>{`Hi, ${username}!`}</span>,
     <input type='submit' value='Log out'/>,
@@ -24,7 +53,8 @@ function AuthView({typedUsername, typedPassword, typeUsername, typePassword, aut
       value={typedPassword}
       onChange={e => typePassword(e.target.value)}
     />,
-    <input type='submit'/>,
+    <input type='submit' value={authText}/>,
+    <Switch {...switchProps}/>,
   ]
   return (
     <form onSubmit={e => {e.preventDefault(); authFormSubmit()}}>
@@ -35,6 +65,8 @@ function AuthView({typedUsername, typedPassword, typeUsername, typePassword, aut
 
 AuthView.propTypes = {
   authFormSubmit: React.PropTypes.func,
+  authFormType: React.PropTypes.string,
+  setAuthFormType: React.PropTypes.func,
   typedUsername: React.PropTypes.string,
   typedPassword: React.PropTypes.string,
   typeUsername: React.PropTypes.func,
@@ -44,6 +76,8 @@ AuthView.propTypes = {
 
 AuthView.defaultProps = {
   authFormSubmit: () => null,
+  authFormType: '',
+  setAuthFormType: () => null,
   typedUsername: '',
   typedPassword: '',
   typeUsername: () => null,
@@ -53,6 +87,7 @@ AuthView.defaultProps = {
 
 const ConnectedAuthView = connect(
   state => ({
+    authFormType: state.get('authFormType'),
     typedUsername: state.get('typedUsername'),
     typedPassword: state.get('typedPassword'),
     user: state.get('user'),
@@ -63,6 +98,8 @@ const ConnectedAuthView = connect(
     typePassword: (password) =>
       dispatch({type: 'typePassword', data: password}),
     authFormSubmit: () => dispatch({type: 'authFormSubmit'}),
+    setAuthFormType: (newType) =>
+      dispatch({type: 'setAuthFormType', data: newType}),
   }),
 )(AuthView)
 
