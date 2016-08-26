@@ -18,6 +18,7 @@ const User = db.define(
       allowNull: false,
       type: Sequelize.STRING,
       field: 'name',
+      unique: true,
     },
     hashedPassword: {
       allowNull: false,
@@ -40,6 +41,7 @@ const Session = db.define(
       allowNull: false,
       type: Sequelize.STRING(512),
       field: 'token',
+      unique: true,
     },
     ttl: {
       allowNull: false,
