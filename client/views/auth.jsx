@@ -3,16 +3,32 @@ import {connect} from 'react-redux'
 import {Map} from 'immutable'
 
 function AuthView({typedUsername, typedPassword, typeUsername, typePassword, authFormSubmit, user}) {
+  const username = user.get('name')
+  const loggedInForm = [
+    <span>{`Hi, ${username}!`}</span>,
+    <input type='submit' value='Log out'/>,
+  ]
+  const loggedOutForm = [
+    <h1>This is an Auth View</h1>,
+    <label htmlFor='username'>Username</label>,
+    <input
+      type='text'
+      name='username'
+      value={typedUsername}
+      onChange={e => typeUsername(e.target.value)}
+    />,
+    <label htmlFor='password'>Password</label>,
+    <input
+      type='password'
+      name='password'
+      value={typedPassword}
+      onChange={e => typePassword(e.target.value)}
+    />,
+    <input type='submit'/>,
+  ]
   return (
-    user.get('name') ?
-    <span>{`Hi, ${user.get('name')}!`}</span> :
     <form onSubmit={e => {e.preventDefault(); authFormSubmit()}}>
-      <h1>This is an Auth View</h1>
-      <label htmlFor='username'>Username</label>
-      <input type='text' name='username' value={typedUsername} onChange={e => typeUsername(e.target.value)}/>
-      <label htmlFor='password'>Password</label>
-      <input type='password' name='password' value={typedPassword} onChange={e => typePassword(e.target.value)}/>
-      <input type='submit'/>
+      {username ? loggedInForm : loggedOutForm}
     </form>
   )
 }
