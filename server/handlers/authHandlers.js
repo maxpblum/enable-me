@@ -1,10 +1,9 @@
 import logging from 'winston'
+import {Promise} from 'when'
 
 import {saltAndHash, getNewToken} from '../utils/authUtils'
 import {serializeUser} from '../serializers'
 import {User, Session} from '../models'
-
-const Promise = global.Promise
 
 const sessionMaxAge = 60 * 60 * 24 * 365
 

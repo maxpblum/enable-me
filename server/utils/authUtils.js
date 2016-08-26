@@ -1,8 +1,8 @@
 import crypto from 'crypto'
 
 import bcrypt from 'bcrypt'
+import {Promise} from 'when'
 
-const Promise = global.Promise
 
 export const saltAndHash = password =>
   new Promise((resolve, reject) =>

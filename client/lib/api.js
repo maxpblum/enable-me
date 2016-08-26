@@ -1,6 +1,6 @@
-// From https://shellmonger.com/2015/03/24/promises-and-ajax-in-ecmascript-6/
-const Promise = window.Promise
+import {Promise} from 'when'
 
+// From https://shellmonger.com/2015/03/24/promises-and-ajax-in-ecmascript-6/
 function makeAjaxRequest({method, url, body, transforms = []}) {
   return new Promise(function(resolve, reject) {
     let req = new XMLHttpRequest()
