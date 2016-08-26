@@ -39,3 +39,7 @@ serve-dev:
 	NODE_ENV=dev $(MAKE) serve-server & $(MAKE) serve-client
 
 serve: build serve-server
+
+install:
+	npm prune
+	npm install
