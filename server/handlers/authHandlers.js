@@ -1,45 +1,68 @@
 import logging from 'winston'
 import {Promise} from 'when'
 
-import {saltAndHash, getNewToken} from '../utils/authUtils'
+import {saltAndHash, getNewToken, checkForMatch, badPassword} from '../utils/authUtils'
 import {serializeUser} from '../serializers'
 import {User, Session} from '../models'
 
 const sessionMaxAge = 60 * 60 * 24 * 365
 
+const validateAuth = req => (req.body.username && req.body.password) ?
+    Promise.resolve() : Promise.reject('Username and password required')
+
+const authenticate = ({res, user}) => {
+  return getNewToken()
+  .then(token => Session.create({token, ttl: sessionMaxAge}))
+  .then(session => session.setUser(user))
+  .then(session => {
+    res.cookie('session', session.token)
+    res.cookie('maxAge', sessionMaxAge * 1000)
+    res.status(200).send(serializeUser(user))
+  })
+}
+
+const unauthorized = new Error('Unauthorized')
+
+const handleUnauthorized = res => err => {
+  if (err === unauthorized) {
+    return Promise.resolve(res.status(401).send(err.message))
+  }
+  return Promise.reject(err)
+}
+
 export function signUp(req, res) {
-  new Promise((resolve, reject) =>
-    (req.body.username && req.body.password) ?
-      resolve() : reject('Username and password required'))
+  validateAuth(req)
   .then(() => saltAndHash(req.body.password))
   .then(({salt, hash}) => User.create({
     name: req.body.username,
     passwordSalt: salt,
     hashedPassword: hash,
   }))
-  .then(user =>
-    getNewToken()
-    .then(token => Session.create({token, ttl: sessionMaxAge}))
-    .then(session => session.setUser(user))
-    .then(session => {
-      res.cookie('session', session.token)
-      res.cookie('maxAge', sessionMaxAge * 1000)
-      res.status(200).send(serializeUser(user))
-    })
-  )
+  .then(user => authenticate({res, user}))
   .catch(err => {
     logging.error(err)
-    res.status(400).send(err)
+    return Promise.reject(unauthorized)
   })
+  .catch(handleUnauthorized(res))
+}
+
+export function logIn(req, res) {
+  return validateAuth(req)
+  .then(() => User.findOne({where: {name: req.body.username}}))
+  .then(user =>
+    checkForMatch({hash: user.hashedPassword, password: req.body.password})
+    .catch(err => Promise.reject(err === badPassword ? unauthorized : err))
+    .then(() => authenticate({res, user}))
+  )
+  .catch(handleUnauthorized(res))
 }
 
 export function logOut(req, res) {
-  new Promise((resolve, reject) =>
-    req.cookies.session ? resolve() : reject())
+  return (req.cookies.session ? Promise.resolve : Promise.reject)()
   .then(() => Session.destroy({where: {token: req.cookies.session}}))
   .then(() => {
     res.clearCookie('session')
-    res.send(200)
+    res.sendStatus(200)
   })
 }
 
