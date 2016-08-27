@@ -2,9 +2,11 @@ import {createStore} from 'redux'
 import {connect} from 'react-redux'
 import {fromJS, Map} from 'immutable'
 import authUpdaters from 'updaters/auth'
+import postUpdaters from 'updaters/post'
 
 const updaters = fromJS({
   auth: authUpdaters,
+  post: postUpdaters,
 })
 .map((updaterGroup, key) =>
   updaterGroup

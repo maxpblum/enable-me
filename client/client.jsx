@@ -11,7 +11,7 @@ const store = getNewStore(window.BOOTSTRAP)
 ReactDOM.render(
   <div>
     <AuthView store={store}/>
-    <PostInput/>
+    <PostInput store={store}/>
   </div>,
   document.getElementById('root')
 )
