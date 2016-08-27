@@ -33,9 +33,8 @@ const handleUnauthorized = res => err => {
 export function signUp(req, res) {
   validateAuth(req)
   .then(() => saltAndHash(req.body.password))
-  .then(({salt, hash}) => User.create({
+  .then(hash => User.create({
     name: req.body.username,
-    passwordSalt: salt,
     hashedPassword: hash,
   }))
   .then(user => authenticate({res, user}))

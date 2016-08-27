@@ -25,11 +25,6 @@ const User = db.define(
       type: Sequelize.STRING,
       field: 'hashed_password',
     },
-    passwordSalt: {
-      allowNull: false,
-      type: Sequelize.STRING,
-      field: 'password_salt',
-    },
   },
   {underscored: true},
 )

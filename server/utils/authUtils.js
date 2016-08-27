@@ -11,10 +11,10 @@ export const checkForMatch = ({password, hash}) =>
       err ? reject(err) :
         res ? resolve() : reject(badPassword)))
 
-export const hash = ({salt, password}) =>
+const hash = ({salt, password}) =>
   new Promise((resolve, reject) =>
     bcrypt.hash(password, salt, (err, hash) =>
-      err ? reject(err) : resolve({salt, hash})
+      err ? reject(err) : resolve(hash)
     )
   )
 
