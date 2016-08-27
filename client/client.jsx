@@ -2,12 +2,16 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import AuthView from 'views/auth'
+import PostInput from 'views/post-input'
 
 import getNewStore from 'store'
 
 const store = getNewStore(window.BOOTSTRAP)
 
 ReactDOM.render(
-  <AuthView store={store}/>,
+  <div>
+    <AuthView store={store}/>
+    <PostInput/>
+  </div>,
   document.getElementById('root')
 )
