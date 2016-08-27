@@ -9,6 +9,7 @@ export default function attachEndpoints(app) {
   app.use(getSessionUser)
   app.use('/build', express.static('build'))
   app.get('/', indexPage)
+  app.get('/create-post', indexPage)
   app.post('/users', signUp)
   app.post('/users/:userId/posts', createPost)
   app.post('/login', logIn)
