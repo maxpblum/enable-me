@@ -1,5 +1,21 @@
 import React from 'react'
 import {connectWith} from 'store'
+import {post} from 'lib/api'
+
+const authFormSubmit = ({setLoggedOut, setLoggedInUser, resetAuthForm, authFormType, user, typedUsername, typedPassword}) => {
+  const authEndpoint = authFormType === 'signup'
+    ? '/users' : '/login'
+  if (user.name) {
+    post('/logout')
+    .then(setLoggedOut)
+  } else {
+    post(authEndpoint, {
+      username: typedUsername,
+      password: typedPassword,
+    }).then(setLoggedInUser)
+  }
+  resetAuthForm()
+}
 
 function Switch({currentType, setAuthFormType}) {
   const {copy, otherType} = currentType === 'login' ?
@@ -28,7 +44,18 @@ Switch.defaultProps = {
   setAuthFormType: () => null,
 }
 
-function AuthView({authFormType, typedUsername, typedPassword, typeUsername, typePassword, authFormSubmit, user, setAuthFormType}) {
+function AuthView({
+  authFormType,
+  typedUsername,
+  typedPassword,
+  typeUsername,
+  typePassword,
+  user,
+  setAuthFormType,
+  setLoggedOut,
+  setLoggedInUser,
+  resetAuthForm
+}) {
   const username = user.name
   const authText = authFormType === 'login' ? 'Log in' : 'Sign up'
   const switchProps = {setAuthFormType, currentType: authFormType}
@@ -56,7 +83,18 @@ function AuthView({authFormType, typedUsername, typedPassword, typeUsername, typ
     <Switch {...switchProps}/>,
   ]
   return (
-    <form onSubmit={e => {e.preventDefault(); authFormSubmit()}}>
+    <form onSubmit={e => {
+      e.preventDefault()
+      authFormSubmit({
+        setLoggedOut,
+        setLoggedInUser,
+        resetAuthForm,
+        authFormType,
+        user,
+        typedUsername,
+        typedPassword
+      })
+    }}>
       {username ? loggedInForm : loggedOutForm}
     </form>
   )
@@ -65,7 +103,10 @@ function AuthView({authFormType, typedUsername, typedPassword, typeUsername, typ
 AuthView.propTypes = {
   authFormSubmit: React.PropTypes.func,
   authFormType: React.PropTypes.string,
+  resetAuthForm: React.PropTypes.func,
   setAuthFormType: React.PropTypes.func,
+  setLoggedInUser: React.PropTypes.func,
+  setLoggedOut: React.PropTypes.func,
   typedUsername: React.PropTypes.string,
   typedPassword: React.PropTypes.string,
   typeUsername: React.PropTypes.func,
@@ -76,7 +117,10 @@ AuthView.propTypes = {
 AuthView.defaultProps = {
   authFormSubmit: () => null,
   authFormType: '',
+  resetAuthForm: () => null,
   setAuthFormType: () => null,
+  setLoggedInUser: () => null,
+  setLoggedOut: () => null,
   typedUsername: '',
   typedPassword: '',
   typeUsername: () => null,
