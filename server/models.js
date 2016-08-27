@@ -46,9 +46,22 @@ const Session = db.define(
 
 Session.belongsTo(User)
 
+const Post = db.define(
+  'post',
+  {
+    text: {
+      allowNull: false,
+      type: Sequelize.STRING(10000),
+    },
+  },
+  {underscored: true},
+)
+
+Post.belongsTo(User)
+
 const sync = () => db.sync({
   force: true,
   logging: info => logging.info(info)
 })
 
-export { User, Session, sync }
+export { User, Session, Post, sync }
