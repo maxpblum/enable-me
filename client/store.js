@@ -1,6 +1,6 @@
 import {createStore} from 'redux'
 import {connect} from 'react-redux'
-import {fromJS} from 'immutable'
+import {fromJS, Map} from 'immutable'
 import authUpdaters from 'updaters/auth'
 
 const updaters = fromJS({
@@ -9,10 +9,10 @@ const updaters = fromJS({
 .map((updaterGroup, key) =>
   updaterGroup
   .map(updater =>
-    (state, ...args) =>
+    (state, data) =>
       state.set(
         key,
-        updater(state.get(key), ...args)
+        updater(state.get(key), data)
       )
   )
 )
@@ -29,16 +29,16 @@ export default function getNewStore(bootstrapData) {
   })
 
   const update = (state = initialState, action) =>
-    updaters.getIn(action.type, s => s)(state, action.data, store)
+    updaters.getIn(action.type, s => s)(state, action.data)
 
   const store = createStore(update)
 
   return store
 }
 
-export const connectWith = key => connect(
-  state => state.get(key).toJS(),
-  dispatch =>
+export const connectWith = (...keys) => connect(
+  state => Map().merge(...keys.map(key => state.get(key))).toJS(),
+  dispatch => Map().merge(...keys.map(key =>
     updaters
     .get(key)
     .map((_, deepKey) =>
@@ -47,5 +47,5 @@ export const connectWith = key => connect(
         data,
       })
     )
-    .toJS(),
+  )).toJS(),
 )
