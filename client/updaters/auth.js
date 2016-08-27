@@ -1,7 +1,7 @@
 import {fromJS} from 'immutable'
 import {post} from 'lib/api'
 
-const authUpdaters = fromJS({
+const authUpdaters = {
   typeUsername: (state, username) =>
     state.set('typedUsername', username),
 
@@ -33,6 +33,6 @@ const authUpdaters = fromJS({
 
   setAuthFormType: (state, newType) =>
     state.set('authFormType', newType),
-})
+}
 
 export default authUpdaters

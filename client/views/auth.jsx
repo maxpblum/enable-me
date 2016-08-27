@@ -1,6 +1,5 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {Map} from 'immutable'
+import {connectWith} from 'store'
 
 function Switch({currentType, setAuthFormType}) {
   const {copy, otherType} = currentType === 'login' ?
@@ -30,7 +29,7 @@ Switch.defaultProps = {
 }
 
 function AuthView({authFormType, typedUsername, typedPassword, typeUsername, typePassword, authFormSubmit, user, setAuthFormType}) {
-  const username = user.get('name')
+  const username = user.name
   const authText = authFormType === 'login' ? 'Log in' : 'Sign up'
   const switchProps = {setAuthFormType, currentType: authFormType}
   const loggedInForm = [
@@ -82,25 +81,7 @@ AuthView.defaultProps = {
   typedPassword: '',
   typeUsername: () => null,
   typePassword: () => null,
-  user: Map(),
+  user: {},
 }
 
-const ConnectedAuthView = connect(
-  state => ({
-    authFormType: state.get('authFormType'),
-    typedUsername: state.get('typedUsername'),
-    typedPassword: state.get('typedPassword'),
-    user: state.get('user'),
-  }),
-  dispatch => ({
-    typeUsername: (username) =>
-      dispatch({type: 'typeUsername', data: username}),
-    typePassword: (password) =>
-      dispatch({type: 'typePassword', data: password}),
-    authFormSubmit: () => dispatch({type: 'authFormSubmit'}),
-    setAuthFormType: (newType) =>
-      dispatch({type: 'setAuthFormType', data: newType}),
-  }),
-)(AuthView)
-
-export default ConnectedAuthView
+export default connectWith('auth')(AuthView)
