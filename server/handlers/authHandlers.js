@@ -1,7 +1,7 @@
 import logging from 'winston'
 import {Promise} from 'when'
 
-import {saltAndHash, getNewToken, checkForMatch, badPassword} from '../utils/authUtils'
+import {handleUnauthorized, unauthorized, saltAndHash, getNewToken, checkForMatch, badPassword} from '../utils/authUtils'
 import {serializeUser} from '../serializers'
 import {User, Session} from '../models'
 
@@ -19,15 +19,6 @@ const authenticate = ({res, user}) => {
     res.cookie('maxAge', sessionMaxAge * 1000)
     res.status(200).send(serializeUser(user))
   })
-}
-
-const unauthorized = new Error('Unauthorized')
-
-const handleUnauthorized = res => err => {
-  if (err === unauthorized) {
-    return Promise.resolve(res.status(401).send(err.message))
-  }
-  return Promise.reject(err)
 }
 
 export function signUp(req, res) {
