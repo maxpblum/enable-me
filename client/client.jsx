@@ -23,7 +23,7 @@ Page.propTypes = {children: React.PropTypes.object}
 const Posts = ({posts}) => (
   <div>
     <Link to='/create-post'>Create a post</Link>
-    {posts.map(post => <p key={`post-${post.id}`}>{post.text}</p>)}
+    {posts.map(post => <p key={`post-${post.id}`}>{post.user.name} wrote: {post.text}</p>)}
   </div>
 )
 

@@ -1,4 +1,4 @@
-import {Post} from '../models'
+import {Post, User} from '../models'
 import {getLoggedInUser, handleUnauthorized} from '../utils/authUtils'
 
 export function createPost(req, res) {
@@ -12,6 +12,6 @@ export function createPost(req, res) {
 }
 
 export function getPosts(req, res) {
-  Post.findAll()
+  Post.findAll({include: [User]})
   .then(posts => res.status(200).send(posts))
 }
