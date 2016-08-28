@@ -10,3 +10,8 @@ export function createPost(req, res) {
   .then(() => res.sendStatus(200))
   .catch(handleUnauthorized(res))
 }
+
+export function getPosts(req, res) {
+  Post.findAll()
+  .then(posts => res.status(200).send(posts))
+}

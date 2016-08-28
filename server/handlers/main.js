@@ -1,7 +1,7 @@
 import express from 'express'
 
 import {logIn, logOut, signUp, getSessionUser} from './authHandlers'
-import {createPost} from './postHandlers'
+import {createPost, getPosts} from './postHandlers'
 import {indexPage} from './pageHandlers'
 
 export default function attachEndpoints(app) {
@@ -14,4 +14,5 @@ export default function attachEndpoints(app) {
   app.post('/users/:userId/posts', createPost)
   app.post('/login', logIn)
   app.post('/logout', logOut)
+  app.get('/posts', getPosts)
 }
