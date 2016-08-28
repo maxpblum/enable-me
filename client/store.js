@@ -3,10 +3,12 @@ import {connect} from 'react-redux'
 import {fromJS, Map} from 'immutable'
 import authUpdaters from 'updaters/auth'
 import postUpdaters from 'updaters/post'
+import postsUpdaters from 'updaters/posts'
 
 const updaters = fromJS({
   auth: authUpdaters,
   post: postUpdaters,
+  posts: postsUpdaters,
 })
 .map((updaterGroup, key) =>
   updaterGroup
@@ -27,6 +29,9 @@ export default function getNewStore(bootstrapData) {
     },
     post: {
       typedPost: '',
+    },
+    posts: {
+      posts: [],
     },
   })
 
