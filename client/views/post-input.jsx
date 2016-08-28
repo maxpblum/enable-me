@@ -8,6 +8,7 @@ const postSubmit = ({user, typedPost, resetPost}) => {
 }
 
 const PostInput = ({user, typePost, typedPost, resetPost}) => (
+  !user.id ? null :
   <form onSubmit={e => {
     e.preventDefault()
     postSubmit({user, typedPost, resetPost})
