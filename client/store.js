@@ -25,6 +25,8 @@ export default function getNewStore(bootstrapData) {
   const initialState = fromJS({
     auth: {
       authFormType: 'signup',
+      typedUsername: '',
+      typedPassword: '',
       ...bootstrapData,
     },
     post: {

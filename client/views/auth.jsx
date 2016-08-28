@@ -5,7 +5,7 @@ import {post} from 'lib/api'
 const authFormSubmit = ({setLoggedOut, setLoggedInUser, resetAuthForm, authFormType, user, typedUsername, typedPassword}) => {
   const authEndpoint = authFormType === 'signup'
     ? '/users' : '/login'
-  if (user.name) {
+  if (user && user.name) {
     post('/logout')
     .then(setLoggedOut)
   } else {
@@ -35,97 +35,78 @@ function Switch({currentType, setAuthFormType}) {
 }
 
 Switch.propTypes = {
-  currentType: React.PropTypes.string,
-  setAuthFormType: React.PropTypes.func,
+  currentType: React.PropTypes.string.isRequired,
+  setAuthFormType: React.PropTypes.func.isRequired,
 }
 
-Switch.defaultProps = {
-  currentType: 'signup',
-  setAuthFormType: () => null,
+function AuthView(props) {
+  if (props.user && props.user.name) {
+    return <LoggedInForm {...props}/>
+  }
+  if (props.authFormType === 'login') {
+    return <LoginForm {...props}/>
+  }
+  return <SignupForm {...props}/>
 }
 
-function AuthView({
-  authFormType,
-  typedUsername,
-  typedPassword,
-  typeUsername,
-  typePassword,
-  user,
-  setAuthFormType,
-  setLoggedOut,
-  setLoggedInUser,
-  resetAuthForm
-}) {
-  const username = user.name
-  const authText = authFormType === 'login' ? 'Log in' : 'Sign up'
-  const switchProps = {setAuthFormType, currentType: authFormType}
-  const loggedInForm = [
-    <span>{`Hi, ${username}!`}</span>,
-    <input type='submit' value='Log out'/>,
-  ]
-  const loggedOutForm = [
-    <h1>This is an Auth View</h1>,
-    <label htmlFor='username'>Username</label>,
-    <input
-      type='text'
-      name='username'
-      value={typedUsername}
-      onChange={e => typeUsername(e.target.value)}
-    />,
-    <label htmlFor='password'>Password</label>,
-    <input
-      type='password'
-      name='password'
-      value={typedPassword}
-      onChange={e => typePassword(e.target.value)}
-    />,
-    <input type='submit' value={authText}/>,
-    <Switch {...switchProps}/>,
-  ]
+AuthView.propTypes = {
+  authFormType: React.PropTypes.string,
+  user: React.PropTypes.object,
+}
+
+function LoggedInForm(props) {
   return (
     <form onSubmit={e => {
       e.preventDefault()
-      authFormSubmit({
-        setLoggedOut,
-        setLoggedInUser,
-        resetAuthForm,
-        authFormType,
-        user,
-        typedUsername,
-        typedPassword
-      })
+      authFormSubmit(props)
     }}>
-      {username ? loggedInForm : loggedOutForm}
+      <span>{`Hi, ${props.user.name}!`}</span>
+      <input type='submit' value='Log out'/>
     </form>
   )
 }
 
-AuthView.propTypes = {
-  authFormSubmit: React.PropTypes.func,
-  authFormType: React.PropTypes.string,
-  resetAuthForm: React.PropTypes.func,
-  setAuthFormType: React.PropTypes.func,
-  setLoggedInUser: React.PropTypes.func,
-  setLoggedOut: React.PropTypes.func,
-  typedUsername: React.PropTypes.string,
-  typedPassword: React.PropTypes.string,
-  typeUsername: React.PropTypes.func,
-  typePassword: React.PropTypes.func,
+LoggedInForm.propTypes = {
   user: React.PropTypes.object,
 }
 
-AuthView.defaultProps = {
-  authFormSubmit: () => null,
-  authFormType: '',
-  resetAuthForm: () => null,
-  setAuthFormType: () => null,
-  setLoggedInUser: () => null,
-  setLoggedOut: () => null,
-  typedUsername: '',
-  typedPassword: '',
-  typeUsername: () => null,
-  typePassword: () => null,
-  user: {},
+const LoginForm = props => <AuthForm authText='Log In' {...props}/>
+const SignupForm = props => <AuthForm authText='Sign Up' {...props}/>
+
+function AuthForm(props) {
+  const switchProps = {setAuthFormType: props.setAuthFormType, currentType: props.authFormType}
+  return (
+    <form onSubmit={e => {
+      e.preventDefault()
+      authFormSubmit(props)
+    }}>
+      <h1>This is an Auth View</h1>
+      <label htmlFor='username'>Username</label>
+      <input
+        type='text'
+        name='username'
+        value={props.typedUsername}
+        onChange={e => props.typeUsername(e.target.value)}
+      />
+      <label htmlFor='password'>Password</label>
+      <input
+        type='password'
+        name='password'
+        value={props.typedPassword}
+        onChange={e => props.typePassword(e.target.value)}
+      />
+      <input type='submit' value={props.authText}/>
+      <Switch {...switchProps}/>
+    </form>
+  )
+}
+
+AuthForm.propTypes = {
+  authText: React.PropTypes.string.isRequired,
+  typePassword: React.PropTypes.func.isRequired,
+  typeUsername: React.PropTypes.func.isRequired,
+  typedPassword: React.PropTypes.string.isRequired,
+  typedUsername: React.PropTypes.string.isRequired,
 }
 
 export default connectWith('auth')(AuthView)
