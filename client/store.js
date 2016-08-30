@@ -4,11 +4,13 @@ import {fromJS, Map} from 'immutable'
 import authUpdaters from 'updaters/auth'
 import postUpdaters from 'updaters/post'
 import postsUpdaters from 'updaters/posts'
+import userUpdaters from 'updaters/user'
 
 const updaters = fromJS({
   auth: authUpdaters,
   post: postUpdaters,
   posts: postsUpdaters,
+  user: userUpdaters,
 })
 .map((updaterGroup, key) =>
   updaterGroup
@@ -27,7 +29,6 @@ export default function getNewStore(bootstrapData) {
       authFormType: 'signup',
       typedUsername: '',
       typedPassword: '',
-      ...bootstrapData,
     },
     post: {
       typedPost: '',
@@ -35,6 +36,7 @@ export default function getNewStore(bootstrapData) {
     posts: {
       posts: [],
     },
+    user: {...bootstrapData},
   })
 
   const update = (state = initialState, action) =>

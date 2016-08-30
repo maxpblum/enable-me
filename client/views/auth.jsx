@@ -109,4 +109,4 @@ AuthForm.propTypes = {
   typedUsername: React.PropTypes.string.isRequired,
 }
 
-export default connectWith('auth')(AuthView)
+export default connectWith('auth', 'user')(AuthView)

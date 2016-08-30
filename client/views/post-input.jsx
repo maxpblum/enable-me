@@ -37,4 +37,4 @@ PostInput.propTypes = {
   user: React.PropTypes.object,
 }
 
-export default connectWith('post', 'auth')(PostInput)
+export default connectWith('post', 'user')(PostInput)
