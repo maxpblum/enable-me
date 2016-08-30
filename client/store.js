@@ -34,7 +34,7 @@ export default function getNewStore(bootstrapData) {
       typedPost: '',
     },
     posts: {
-      posts: [],
+      posts: {},
     },
     user: {...bootstrapData},
   })

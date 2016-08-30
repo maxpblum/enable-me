@@ -1,3 +1,4 @@
+import logging from 'winston'
 import {Promise} from 'when'
 
 import {Post, User, Comment} from '../models'
@@ -23,16 +24,16 @@ export function getPost(id) {
 }
 
 export function createComment(req, res) {
-  return Promise.all([
-    getLoggedInUser(req, req.params.userId),
-    getPost(req.params.postId),
-  ])
-  .then(([user, post]) =>
+  return getPost(req.params.postId)
+  .then(post =>
     Comment.create({text: req.body.comment})
-    .then(comment => Promise.all([
-      comment.setUser(user),
-      comment.setPost(post),
-    ]))
+    .then(comment => {
+      logging.info('comment: ', comment)
+      return Promise.all([
+        comment.setUser(req.user),
+        comment.setPost(post),
+      ])
+    })
   )
   .then(() => res.sendStatus(200))
 }
