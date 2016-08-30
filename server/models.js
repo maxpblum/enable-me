@@ -44,8 +44,6 @@ const Session = db.define(
   {underscored: true},
 )
 
-Session.belongsTo(User)
-
 const Post = db.define(
   'post',
   {
@@ -57,11 +55,28 @@ const Post = db.define(
   {underscored: true},
 )
 
+const Comment = db.define(
+  'comment',
+  {
+    text: {
+      allowNull: false,
+      type: Sequelize.STRING(10000),
+    },
+  },
+  {underscored: true},
+)
+
+Session.belongsTo(User)
+
 Post.belongsTo(User)
+Post.hasMany(Comment)
+
+Comment.belongsTo(User)
+Comment.belongsTo(Post)
 
 const sync = () => db.sync({
   force: true,
   logging: info => logging.info(info)
 })
 
-export { User, Session, Post, sync }
+export { User, Session, Post, Comment, sync }
