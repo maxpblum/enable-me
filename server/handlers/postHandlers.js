@@ -14,7 +14,7 @@ export function createPost(req, res) {
 }
 
 export function getPosts(req, res) {
-  Post.findAll({include: [User]})
+  Post.findAll({include: [User, {model: Comment, include: [User]}]})
   .then(posts => res.status(200).send(posts))
 }
 
