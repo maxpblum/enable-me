@@ -60,8 +60,8 @@ export const getSessionUser = (req, res, next) => {
   const token = req.cookies.session
   if (token) {
     Session.findOne({where: {token}, include: [User]})
-    .then(({user}) => {
-      req.user = user
+    .then(session => {
+      if (session) { req.user = session.user }
       next()
     })
   }
