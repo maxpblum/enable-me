@@ -1,10 +1,12 @@
 import React from 'react'
+import {browserHistory} from 'react-router'
 import {post} from 'lib/api'
 import {connectWith} from 'store'
 
 const postSubmit = ({user, typedPost, resetPost}) => {
   post(`/users/${user.id}/posts`, {post: typedPost})
   resetPost()
+  browserHistory.push('/')
 }
 
 const PostInput = ({user, typePost, typedPost, resetPost}) => (
