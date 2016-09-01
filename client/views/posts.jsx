@@ -7,7 +7,7 @@ import {connectWith} from 'store'
 import {get, post} from 'lib/api'
 
 const Comment = ({user, text}) => (
-  <div>{user.name} commented: {text}</div>
+  <div>At 6:24 PM, {user.name} commented: {text}</div>
 )
 
 Comment.propTypes = {
@@ -32,7 +32,7 @@ const Post = ({
     e.preventDefault()
     submitComment(typedComment)
   }}>
-    {user.name} wrote: {text}
+    At 6:23 PM, {user.name} wrote: {text}
     {comments.map((comment) => <Comment key={`comment-${comment.id}`} {...comment}/>)}
     <label htmlFor='comment'>Write a comment</label>
     <input
