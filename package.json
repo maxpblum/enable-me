@@ -33,6 +33,7 @@
     "react-router": "^2.7.0",
     "redux": "^3.5.2",
     "sequelize": "^3.24.0",
+    "shell-escape": "^0.2.0",
     "webpack": "^1.13.1",
     "when": "^3.7.7",
     "winston": "^2.2.0"

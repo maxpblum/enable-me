@@ -41,5 +41,6 @@ serve-dev:
 serve: build serve-server
 
 install:
+	pip install -r requirements.txt
 	npm prune
 	npm install
