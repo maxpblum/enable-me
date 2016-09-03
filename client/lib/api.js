@@ -12,7 +12,7 @@ function makeAjaxRequest({method, url, body, transforms = []}) {
       if (req.status === 200) {
         resolve(req.response)
       } else {
-        reject(new Error(req.statusText))
+        reject(new Error(req.response || req.statusText))
       }
     }
 
