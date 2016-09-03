@@ -1,6 +1,7 @@
 {
   "name": "enable-me",
   "version": "1.0.0",
+  "engine": "node 5.9.1",
   "description": "",
   "main": "index.js",
   "scripts": {
