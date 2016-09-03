@@ -24,10 +24,13 @@ stop-db-dev:
 	rm -rf ./.db_tmp
 
 migrate-db:
+	node scripts/sync-models.js
+
+migrate-db-force:
 	# WARNING: This will drop tables if they exist
 	# Sleeping five seconds, CTRL+C to cancel
 	sleep 5
-	node scripts/sync-models.js
+	node scripts/sync-models.js --force
 
 serve-server:
 	PORT=$(PORT) $(NODEMON_BIN) --watch ./server ./server/server

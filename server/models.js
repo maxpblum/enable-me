@@ -74,9 +74,6 @@ Post.hasMany(Comment)
 Comment.belongsTo(User)
 Comment.belongsTo(Post)
 
-const sync = () => db.sync({
-  force: true,
-  logging: info => logging.info(info)
-})
+const sync = ({force=false}) => db.sync({force, logging: info => logging.info(info)})
 
 export { User, Session, Post, Comment, sync }

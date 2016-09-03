@@ -37,7 +37,8 @@
     "shell-escape": "^0.2.0",
     "webpack": "^1.13.1",
     "when": "^3.7.7",
-    "winston": "^2.2.0"
+    "winston": "^2.2.0",
+    "yargs": "^5.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.2",
