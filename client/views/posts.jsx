@@ -75,7 +75,7 @@ const Posts = ({posts, resetComment, typeComment, setError, setPosts}) => (
           submitComment(post.id, comment)
           .catch(e => setError(e.message))
           .then(() => resetComment(post.id))
-          .then(get('/posts'))
+          .then(() => get('/posts'))
           .then(posts => setPosts(JSON.parse(posts)))
         }
         {...post}
