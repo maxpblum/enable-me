@@ -1,8 +1,16 @@
 import Sequelize from 'sequelize'
 import logging from 'winston'
 
-const db = new Sequelize('max', 'max', 'password', {
-  host: 'localhost',
+const PG_STRING = process.env.DATABASE_URL
+const PG_HOST = process.env.PG_HOST || 'localhost'
+const PG_USER = process.env.PG_USER || 'default'
+const PG_PASSWORD = process.env.PG_PASSWORD || 'password'
+const PG_DB = process.env.PG_DB || 'default'
+
+const db = PG_STRING
+? new Sequelize(PG_STRING, {dialect: 'postgres', pool: {max: 5, min: 0, idle: 10000}})
+: new Sequelize(PG_DB, PG_USER, PG_PASSWORD, {
+  host: PG_HOST,
   dialect: 'postgres',
   pool: {
     max: 5,
