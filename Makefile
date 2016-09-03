@@ -43,7 +43,11 @@ serve-dev:
 
 serve: build serve-server
 
+prepare-sentiment-analysis:
+	python -m textblob.download_corpora
+
 install:
 	pip install -r requirements.txt
+	$(MAKE) prepare-sentiment-analysis
 	npm prune
 	npm install
