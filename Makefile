@@ -4,7 +4,7 @@ NODEMON_BIN = ./node_modules/.bin/nodemon
 WEBPACK_BIN = ./node_modules/.bin/webpack
 WEBPACK_DEV_SERVER_BIN = ./node_modules/.bin/webpack-dev-server
 ESLINT_BIN = ./node_modules/.bin/eslint
-PORT = 8000
+PORT ?= 8000
 
 build:
 	$(WEBPACK_BIN)
