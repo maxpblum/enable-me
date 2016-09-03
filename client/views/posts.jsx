@@ -64,7 +64,7 @@ Post.defaultProps = {
 const submitComment = (postId, comment) =>
   post(`/posts/${postId}/comments`, {comment})
 
-const Posts = ({posts, resetComment, typeComment, setPosts}) => (
+const Posts = ({posts, resetComment, typeComment, setError, setPosts}) => (
   <div>
     <Link to='/create-post'>Create a post</Link>
     {_.values(posts).map(post =>
@@ -73,6 +73,7 @@ const Posts = ({posts, resetComment, typeComment, setPosts}) => (
         typeComment={comment => typeComment({id: post.id, comment})}
         submitComment={comment =>
           submitComment(post.id, comment)
+          .catch(e => setError(e.message))
           .then(() => resetComment(post.id))
           .then(get('/posts'))
           .then(posts => setPosts(JSON.parse(posts)))
@@ -86,6 +87,7 @@ const Posts = ({posts, resetComment, typeComment, setPosts}) => (
 Posts.propTypes = {
   posts: React.PropTypes.object,
   resetComment: React.PropTypes.func,
+  setError: React.PropTypes.func,
   setPosts: React.PropTypes.func,
   typeComment: React.PropTypes.func,
 }
@@ -96,4 +98,4 @@ Posts.defaultProps = {
   typeComment: () => null,
 }
 
-export default connectWith('posts')(Posts)
+export default connectWith('posts', 'error')(Posts)
