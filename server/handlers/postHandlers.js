@@ -3,6 +3,7 @@ import {Promise} from 'when'
 
 import {Post, User, Comment} from '../models'
 import {getLoggedInUser, handleUnauthorized} from '../utils/authUtils'
+import firstBadSentence from '../utils/sentiment'
 
 export function createPost(req, res) {
   getLoggedInUser(req, req.params.userId)
@@ -28,6 +29,10 @@ export function createComment(req, res) {
   .then(post =>
     Comment.create({text: req.body.comment})
     .then(comment => {
+      const badSentence = firstBadSentence(comment.text)
+      if (badSentence) {
+        return res.status(400).send(`Whoops, this sentence isn't positive enough: ${badSentence}`)
+      }
       logging.info('comment: ', comment)
       return Promise.all([
         comment.setUser(req.user),
