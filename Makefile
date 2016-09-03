@@ -5,6 +5,7 @@ WEBPACK_BIN = ./node_modules/.bin/webpack
 WEBPACK_DEV_SERVER_BIN = ./node_modules/.bin/webpack-dev-server
 ESLINT_BIN = ./node_modules/.bin/eslint
 PORT = 8000
+PYTHON = ./venv/bin/python
 
 build:
 	$(WEBPACK_BIN)
@@ -30,7 +31,7 @@ migrate-db:
 	node scripts/sync-models.js
 
 serve-server:
-	PORT=$(PORT) $(NODEMON_BIN) --watch ./server ./server/server
+	PYTHON=$(PYTHON) PORT=$(PORT) $(NODEMON_BIN) --watch ./server ./server/server
 
 serve-client:
 	$(WEBPACK_DEV_SERVER_BIN)
@@ -40,7 +41,12 @@ serve-dev:
 
 serve: build serve-server
 
-install:
-	pip install -r requirements.txt
+install: venv
 	npm prune
 	npm install
+
+venv: venv/bin/activate
+venv/bin/activate: requirements.txt
+	test -d venv || virtualenv venv
+	venv/bin/pip install -Ur requirements.txt
+	touch venv/bin/activate
