@@ -2,12 +2,14 @@ import {createStore} from 'redux'
 import {connect} from 'react-redux'
 import {fromJS, Map} from 'immutable'
 import authUpdaters from 'updaters/auth'
+import errorUpdaters from 'updaters/error'
 import postUpdaters from 'updaters/post'
 import postsUpdaters from 'updaters/posts'
 import userUpdaters from 'updaters/user'
 
 const updaters = fromJS({
   auth: authUpdaters,
+  error: errorUpdaters,
   post: postUpdaters,
   posts: postsUpdaters,
   user: userUpdaters,
@@ -37,6 +39,7 @@ export default function getNewStore(bootstrapData) {
       posts: {},
     },
     user: {...bootstrapData},
+    error: {error: null},
   })
 
   const update = (state = initialState, action) =>

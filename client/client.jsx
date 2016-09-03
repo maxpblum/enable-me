@@ -6,7 +6,7 @@ import AuthView from 'views/auth'
 import Posts from 'views/posts'
 import PostInput from 'views/post-input'
 
-import getNewStore from 'store'
+import getNewStore, {connectWith} from 'store'
 
 import {get} from 'lib/api'
 
@@ -18,9 +18,16 @@ const fetchPosts = () =>
     data: JSON.parse(posts),
   }))
 
+const Error = connectWith('error')(({error}) => {
+  return (
+    <p style={{color: 'red'}}>{error}</p>
+  )
+})
+
 const Page = ({children}) => (
   <div>
     <AuthView store={store}/>
+    <Error store={store}/>
     {children}
   </div>
 )
