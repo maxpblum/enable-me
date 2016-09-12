@@ -5,8 +5,10 @@ import {connectWith} from 'store'
 
 const postSubmit = ({user, typedPost, resetPost}) => {
   post(`/users/${user.id}/posts`, {post: typedPost})
-  resetPost()
-  browserHistory.push('/')
+  .then(() => {
+    resetPost()
+    browserHistory.push('/')
+  })
 }
 
 const PostInput = ({user, typePost, typedPost, resetPost}) => (
