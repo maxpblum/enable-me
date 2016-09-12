@@ -5,6 +5,7 @@ WEBPACK_BIN = ./node_modules/.bin/webpack
 WEBPACK_DEV_SERVER_BIN = ./node_modules/.bin/webpack-dev-server
 ESLINT_BIN = ./node_modules/.bin/eslint
 PORT ?= 8000
+DATABASE_URL ?= postgres://enable-me:password@localhost:5432/enable-me
 
 build:
 	$(WEBPACK_BIN)
@@ -17,14 +18,15 @@ start-db-dev:
 	initdb -E 'UTF-8' ./.db_tmp
 	pg_ctl -D ./.db_tmp -l ./.db_tmp/server.log start
 	sleep 2
-	createdb
+	createdb enable-me
+	createuser enable-me
 
 stop-db-dev:
 	pg_ctl -D ./.db_tmp -l ./.db_tmp/server.log stop
 	rm -rf ./.db_tmp
 
 migrate-db:
-	node scripts/sync-models.js
+	DATABASE_URL=$(DATABASE_URL) node scripts/sync-models.js
 
 migrate-db-force:
 	# WARNING: This will drop tables if they exist
@@ -33,7 +35,7 @@ migrate-db-force:
 	node scripts/sync-models.js --force
 
 serve-server:
-	PORT=$(PORT) $(NODEMON_BIN) --watch ./server ./server/server
+	DATABASE_URL=$(DATABASE_URL) PORT=$(PORT) $(NODEMON_BIN) --watch ./server ./server/server
 
 serve-client:
 	$(WEBPACK_DEV_SERVER_BIN)
