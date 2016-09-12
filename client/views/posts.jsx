@@ -28,20 +28,22 @@ const Post = ({
   typeComment,
   submitComment,
 }) => (
-  <form onSubmit={e => {
+  <form className='post' onSubmit={e => {
     e.preventDefault()
     submitComment(typedComment)
   }}>
     At 6:23 PM, {user.name} wrote: {text}
-    {comments.map((comment) => <Comment key={`comment-${comment.id}`} {...comment}/>)}
-    <label htmlFor='comment'>Write a comment</label>
-    <input
-      type='text'
-      name='comment'
-      value={typedComment}
-      onChange={e => typeComment(e.target.value)}
-    />
-    <input type='submit'/>
+    {comments.map((comment) => <Comment className='comment' key={`comment-${comment.id}`} {...comment}/>)}
+    <div className='comment-input'>
+      <label htmlFor='comment'>Write a comment</label>
+      <input
+        type='text'
+        name='comment'
+        value={typedComment}
+        onChange={e => typeComment(e.target.value)}
+      />
+      <input type='submit'/>
+    </div>
   </form>
 )
 
